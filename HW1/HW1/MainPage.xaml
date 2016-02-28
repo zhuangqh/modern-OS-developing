@@ -7,11 +7,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <TextBlock x:Name="board" TextWrapping="Wrap" Text="" Height="600" Width="400" RenderTransformOrigin="0.51,0.5" Margin="797,60,60,60" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Monaco" FontSize="32"/>
+    <Grid Background="{ThemeResource IMECandidateListPagingButtonPressedForegroundThemeBrush}">
         <TextBox x:Name="namePicker" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="185,119,0,0" TextChanged="namePicker_TextChanged"/>
-        <Button x:Name="confirm" Content="确认" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="299,119,0,0" Click="confirm_Click"/>
-        <Button x:Name="saying" Content="随机发言" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="191,249,0,0" Click="saying_Click"/>
+        <Button x:Name="confirm" Content="确认" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="279,119,0,0" Click="confirm_Click"/>
+        <Button x:Name="saying" Content="随机发言" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="185,190,0,0" Click="saying_Click"/>
+        <TextBlock x:Name="board" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="656,60,0,60" Height="600" Width="500" FontSize="26.667" FontFamily="Monaco" Padding="60,0"/>
+        <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="600" VerticalAlignment="Top" Width="514" Margin="656,60,0,0" Padding="0"/>
 
     </Grid>
 </Page>
