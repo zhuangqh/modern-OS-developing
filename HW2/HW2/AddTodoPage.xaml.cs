@@ -13,15 +13,16 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Popups;
 
-//“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
+// “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
 namespace HW2 {
   /// <summary>
   /// 可用于自身或导航至 Frame 内部的空白页。
   /// </summary>
-  public sealed partial class MainPage : Page {
-    public MainPage() {
+  public sealed partial class AddTodoPage : Page {
+    public AddTodoPage() {
       this.InitializeComponent();
     }
 
@@ -37,10 +38,7 @@ namespace HW2 {
         SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
             AppViewBackButtonVisibility.Collapsed;
       }
-    }
-
-    private void AddTodoButton_Click(object sender, RoutedEventArgs e) {
-      Frame.Navigate(typeof(AddTodoPage), "");
+      var i = new MessageDialog("Welcome!").ShowAsync();
     }
   }
 }
