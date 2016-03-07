@@ -42,5 +42,23 @@ namespace HW2 {
     private void AddTodoButton_Click(object sender, RoutedEventArgs e) {
       Frame.Navigate(typeof(AddTodoPage), "");
     }
+
+    private void TodoCheckBox_Checked(object sender, RoutedEventArgs e) {
+      CheckBox cb = sender as CheckBox;
+      if (cb.Name == "TodoCheckBox1") {
+        TodoCheckLine1.Visibility = Visibility.Visible;
+      } else if (cb.Name == "TodoCheckBox2") {
+        TodoCheckLine2.Visibility = Visibility.Visible;
+      }
+    }
+
+    private void TodoCheckBox_Unchecked(object sender, RoutedEventArgs e) {
+      CheckBox cb = sender as CheckBox;
+      if (cb.Name == "TodoCheckBox1") {
+        TodoCheckLine1.Visibility = Visibility.Collapsed;
+      } else if (cb.Name == "TodoCheckBox2") {
+        TodoCheckLine2.Visibility = Visibility.Collapsed;
+      }
+    }
   }
 }
