@@ -6,9 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.Background>
-        <ImageBrush Stretch="None" ImageSource="Assets/background.jpg"/>
-    </Page.Background>
 
     <Page.BottomAppBar>
         <CommandBar>
@@ -16,15 +13,40 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid x:Name="All" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup x:Name="VisualStateGroup">
+                <VisualState x:Name="VisualStateMin0">
+                    <VisualState.Setters>
+                        <Setter Target="InlineToDoItemViewGrid.(UIElement.Visibility)" Value="Collapsed"/>
+                        <Setter Target="TodoListView.(Grid.ColumnSpan)" Value="2" />
+                    </VisualState.Setters>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+                <VisualState x:Name="VisualStateMin800">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="Title" Grid.Row="0" Text="Todos" Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Monaco" Margin="10,10,0,0" />
-        <ScrollViewer Grid.Row="1">
-            <StackPanel Margin="50,0,0,0">
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Todo item's view-->
+            <ListView x:Name="TodoListView">
                 <Grid Height="100">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="42"/>
@@ -37,14 +59,6 @@
                     <Image Grid.Column="1" Source="Assets/post.jpg" Height="90" Width="90" Margin="0,3,12,7"/>
                     <TextBlock Grid.Column="2" Text="完成作业" VerticalAlignment="Center" Foreground="Black" FontWeight="Normal" FontSize="15" LineHeight="20" TextWrapping="Wrap" />
                     <Line x:Name="TodoCheckLine1" Grid.Column="2" Stretch="Fill" Stroke="Black" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Collapsed" />
-                    <AppBarButton Grid.Column="3" Icon="Setting" IsCompact="True" VerticalAlignment="Center">
-                        <AppBarButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Edit"/>
-                                <MenuFlyoutItem Text="Delete"/>
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
                 </Grid>
                 <Grid Height="100">
                     <Grid.ColumnDefinitions>
@@ -58,16 +72,30 @@
                     <Image Grid.Column="1" Source="Assets/post.jpg" Height="90" Width="90" Margin="0,3,12,7"/>
                     <TextBlock Grid.Column="2" Text="完成作业" VerticalAlignment="Center" Foreground="Black" FontWeight="Normal" FontSize="15" LineHeight="20" TextWrapping="Wrap" />
                     <Line x:Name="TodoCheckLine2" Grid.Column="2" Stretch="Fill" Stroke="Black" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Visibility="Collapsed" />
-                    <AppBarButton Grid.Column="3" Icon="Setting" IsCompact="True" VerticalAlignment="Center">
-                        <AppBarButton.Flyout>
-                            <MenuFlyout>
-                                <MenuFlyoutItem Text="Edit"/>
-                                <MenuFlyoutItem Text="Delete"/>
-                            </MenuFlyout>
-                        </AppBarButton.Flyout>
-                    </AppBarButton>
                 </Grid>
-            </StackPanel>
-        </ScrollViewer>
+            </ListView>
+
+            <Grid x:Name="InlineToDoItemViewGrid" Grid.Column="1" >
+                <ScrollViewer Margin="20">
+                    <StackPanel>
+
+                        <Rectangle Width="350" Height="180" Margin="4" Fill="LightBlue" RenderTransformOrigin="0.5,0.5">
+                            <Rectangle.RenderTransform>
+                                <CompositeTransform ScaleX="{Binding Value, ElementName=MySlider}"
+                                        ScaleY="{Binding Value, ElementName=MySlider}"/>
+                            </Rectangle.RenderTransform>
+                        </Rectangle>
+                        <Slider Padding="50,0,50,0" Minimum="0.5" Maximum="1.0" StepFrequency="0.1" x:Name="MySlider"/>
+                        <TextBox Width="350" Header="Title" Margin="0,12,0,0" />
+                        <TextBox Width="350" Height="96" Margin="0,12,0,0" Header="Details" />
+                        <DatePicker Width="350" Margin="0,12,0,0" Header="Due Date" HorizontalAlignment="Center" />
+                        <RelativePanel Width="350" Margin="0,24,0,0">
+                            <Button x:Name="createButton" Content="Create"></Button>
+                            <Button x:Name="CancelButton" Content="Cancel" RelativePanel.AlignRightWithPanel="True"></Button>
+                        </RelativePanel>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Grid>
     </Grid>
 </Page>
