@@ -23,42 +23,28 @@ namespace HW3 {
   public sealed partial class MainPage : Page {
     public MainPage() {
       this.InitializeComponent();
+      this.ViewModel = new ViewModels.TodoItemViewModel();
     }
+    
+    public ViewModels.TodoItemViewModel ViewModel { get; set; }
 
     protected override void OnNavigatedTo(NavigationEventArgs e) {
-      Frame rootFrame = Window.Current.Content as Frame;
-
-      if (rootFrame.CanGoBack) {
-        // Show UI in title bar if opted-in and in-app backstack is not empty.
-        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-            AppViewBackButtonVisibility.Visible;
-      } else {
-        // Remove the UI from the title bar if in-app back stack is empty.
-        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-            AppViewBackButtonVisibility.Collapsed;
+      if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
+        this.ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
       }
     }
 
     private void AddTodoButton_Click(object sender, RoutedEventArgs e) {
-      Frame.Navigate(typeof(AddTodoPage), "");
+      Frame.Navigate(typeof(AddTodoPage), ViewModel);
     }
 
-    private void TodoCheckBox_Checked(object sender, RoutedEventArgs e) {
-      CheckBox cb = sender as CheckBox;
-      if (cb.Name == "TodoCheckBox1") {
-        TodoCheckLine1.Visibility = Visibility.Visible;
-      } else if (cb.Name == "TodoCheckBox2") {
-        TodoCheckLine2.Visibility = Visibility.Visible;
-      }
+    private void TodoItem_ItemClicked(object sender, ItemClickEventArgs e) {
+      ViewModel.SelectedItem = (e.ClickedItem as Models.TodoItem);
+      Frame.Navigate(typeof(AddTodoPage), ViewModel);
     }
 
-    private void TodoCheckBox_Unchecked(object sender, RoutedEventArgs e) {
-      CheckBox cb = sender as CheckBox;
-      if (cb.Name == "TodoCheckBox1") {
-        TodoCheckLine1.Visibility = Visibility.Collapsed;
-      } else if (cb.Name == "TodoCheckBox2") {
-        TodoCheckLine2.Visibility = Visibility.Collapsed;
-      }
+    private void Complete_Checked(object sender, RoutedEventArgs e) {
+      
     }
   }
 }

@@ -7,21 +7,20 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="1280*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.Background>
-            <ImageBrush ImageSource="ms-appx:///Assets/background.jpg" Stretch="None"/>
-        </Grid.Background>
+    <Page.BottomAppBar>
+        <CommandBar>
+            <AppBarButton x:Name="DeleteTodoButton" Icon="Delete" Label="delete" Click="DeleteTodoButton_Click" />
+        </CommandBar>
+    </Page.BottomAppBar>
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="textBlock" Grid.Row="0" Text="Edit Todo Item" Style="{StaticResource HeaderTextBlockStyle}" Margin="10,10,0,0" FontFamily="Monaco"/>
-        <Grid Margin="0,71,0,0" Grid.RowSpan="2">
+        <Grid Margin="0,71,0,0" Grid.Row="1">
             <ScrollViewer>
                 <StackPanel>
                     <StackPanel.Background>
@@ -36,6 +35,7 @@
                     <DatePicker x:Name="DueDatePicker" Width="350" Margin="0,12,0,0" Header="Due Date" HorizontalAlignment="Center" />
                     <RelativePanel Width="350" Margin="0,24,0,0">
                         <Button x:Name="CreateButton" Content="Create" Click="CreateButton_Click"></Button>
+                        <Button x:Name="UpdateButton" Content="Update" Click="UpdateButton_Click"></Button>
                         <Button x:Name="CancelButton" Content="Cancel" RelativePanel.AlignRightWithPanel="True" Click="CancelButton_Click"></Button>
                     </RelativePanel>
                 </StackPanel>

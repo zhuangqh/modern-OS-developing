@@ -76,6 +76,16 @@ namespace HW3 {
       // You can register for this event in each page if you want to exclude specific pages from back navigation, 
       // or you want to execute page-level code before displaying the page.
       Windows.UI.Core.SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+      rootFrame.Navigated += (s, a) =>
+      {
+        if (rootFrame.CanGoBack) {
+          // Setting this visible is ignored on Mobile and when in tablet mode!     
+          Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.Visible;
+        } else {
+          Windows.UI.Core.SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = Windows.UI.Core.AppViewBackButtonVisibility.Collapsed;
+        }
+      };
     }
 
     /// <summary>

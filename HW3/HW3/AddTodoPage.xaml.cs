@@ -30,27 +30,48 @@ namespace HW3 {
       this.InitializeComponent();
     }
 
-    protected override void OnNavigatedTo(NavigationEventArgs e) {
-      Frame rootFrame = Window.Current.Content as Frame;
+    private ViewModels.TodoItemViewModel ViewModel;
 
-      if (rootFrame.CanGoBack) {
-        // Show UI in title bar if opted-in and in-app backstack is not empty.
-        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-            AppViewBackButtonVisibility.Visible;
+    protected override void OnNavigatedTo(NavigationEventArgs e) {
+      ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
+      if (ViewModel.SelectedItem == null) {
+        UpdateButton.Visibility = Visibility.Collapsed;
       } else {
-        // Remove the UI from the title bar if in-app back stack is empty.
-        SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility =
-            AppViewBackButtonVisibility.Collapsed;
+        CreateButton.Visibility = Visibility.Collapsed;
+        TitleTextBox.Text = ViewModel.SelectedItem.Title;
+        DetailTextBox.Text = ViewModel.SelectedItem.Discription;
+        DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
       }
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
-      Todo todo = new Todo(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date.DateTime);
-      todo.Check();
+      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+      if (TodoToCreate.TodoInfoValidator()) {
+        ViewModel.AddTodoItem(TodoToCreate);
+        Frame.Navigate(typeof(MainPage), ViewModel);
+      }
     }
 
     private void CancelButton_Click(object sender, RoutedEventArgs e) {
-      Todo.ResetInfo(ref TitleTextBox, ref DetailTextBox, ref DueDatePicker);
+      Frame.Navigate(typeof(MainPage), ViewModel);
+    }
+
+    private void DeleteTodoButton_Click(object sender, RoutedEventArgs e) {
+      if (ViewModel.SelectedItem != null) {
+        ViewModel.DeleteTodoItem(ViewModel.SelectedItem.Id);
+        Frame.Navigate(typeof(MainPage), ViewModel);
+      }
+    }
+
+    private void UpdateButton_Click(object sender, RoutedEventArgs e) {
+      if (ViewModel.SelectedItem != null) {
+        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+
+        if (TodoToUpdate.TodoInfoValidator()) {
+          ViewModel.UpdateTodoItem(ViewModel.SelectedItem.Id, TodoToUpdate);
+          Frame.Navigate(typeof(MainPage), ViewModel);
+        }
+      }
     }
 
     private async void SelectPictureButton_Click(object sender, RoutedEventArgs e) {
@@ -75,48 +96,8 @@ namespace HW3 {
         }
       }
     }
+
+
   }
 
-  /// <summary>
-  /// 用于处理Todo项相关事务
-  /// </summary>
-  public class Todo {
-    public string Title { get; set; }
-    public string Detail { get; set; }
-    public DateTime DueDate { get; set; }
-
-    public Todo(string Title, string Detail, DateTime DueDate) {
-      this.Title = Title;
-      this.Detail = Detail;
-      this.DueDate = DueDate;
-    }
-
-    public Todo() { }
-
-    public void Check() {
-      string MessageToNotify = string.Empty;
-
-      if (Title.Length == 0) {
-        MessageToNotify += "Title is empty!\n";
-      }
-
-      if (Detail.Length == 0) {
-        MessageToNotify += "Details are empty!\n";
-      }
-
-      if (DueDate.Subtract(DateTime.Now).Days < 0) {
-        MessageToNotify += "Due date should be later than now!\n";
-      }
-
-      if (MessageToNotify.Length != 0) {
-        var Notify = new MessageDialog(MessageToNotify).ShowAsync();
-      }
-    }
-
-    public static void ResetInfo(ref TextBox Title, ref TextBox Detail, ref DatePicker DueDate) {
-      Title.Text = string.Empty;
-      Detail.Text = string.Empty;
-      DueDate.Date = DateTime.Now;
-    }
-  }
 }
