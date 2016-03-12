@@ -23,7 +23,7 @@ namespace HW3.Models {
       this.Id = Guid.NewGuid().ToString();
       this.Title = title;
       this.Discription = discription;
-      this.Completed = true;
+      this.Completed = false;
       this.DueDate = duedate.DateTime;
     }
 

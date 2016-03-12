@@ -25,21 +25,36 @@ namespace HW3 {
     public MainPage() {
       this.InitializeComponent();
       this.ViewModel = new ViewModels.TodoItemViewModel();
-    }
-    
+      this.SizeChanged += (s, e) => {
+        SideGridShow = e.NewSize.Width > 800 ? true : false;
+      };
+     }
+
     public ViewModels.TodoItemViewModel ViewModel { get; set; }
+
+    private bool SideGridShow { get; set; }  // 记录右边的编辑框显示与否
 
     protected override void OnNavigatedTo(NavigationEventArgs e) {
       if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
         this.ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
-        if (ViewModel.SelectedItem == null) {
-          UpdateButton.Visibility = Visibility.Collapsed;
-        } else {
-          CreateButton.Visibility = Visibility.Collapsed;
-          TitleTextBox.Text = ViewModel.SelectedItem.Title;
-          DetailTextBox.Text = ViewModel.SelectedItem.Discription;
-          DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
-        }
+        SideGrid_Set();
+      }
+    }
+
+    // 设置右边编辑框的信息
+    private void SideGrid_Set() {
+      if (ViewModel.SelectedItem == null) {
+        CreateButton.Visibility = Visibility.Visible;
+        UpdateButton.Visibility = Visibility.Collapsed;
+        TitleTextBox.Text = string.Empty;
+        DetailTextBox.Text = string.Empty;
+        DueDatePicker.Date = DateTime.Now;
+      } else {
+        CreateButton.Visibility = Visibility.Collapsed;
+        UpdateButton.Visibility = Visibility.Visible;
+        TitleTextBox.Text = ViewModel.SelectedItem.Title;
+        DetailTextBox.Text = ViewModel.SelectedItem.Discription;
+        DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
       }
     }
 
@@ -49,24 +64,32 @@ namespace HW3 {
 
     private void TodoItem_ItemClicked(object sender, ItemClickEventArgs e) {
       ViewModel.SelectedItem = (e.ClickedItem as Models.TodoItem);
-      Frame.Navigate(typeof(AddTodoPage), ViewModel);
-    }
-
-    private void fuck(object sender, ItemClickEventArgs e) {
-      ViewModel.SelectedItem = (e.ClickedItem as Models.TodoItem);
-      
+      if (!SideGridShow)
+        Frame.Navigate(typeof(AddTodoPage), ViewModel);
+      SideGrid_Set();
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
-
-    }
-
-    private void CancelButton_Click(object sender, RoutedEventArgs e) {
-
+      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+      if (TodoToCreate.TodoInfoValidator()) {
+        ViewModel.AddTodoItem(TodoToCreate);
+      }
     }
 
     private void UpdateButton_Click(object sender, RoutedEventArgs e) {
+      if (ViewModel.SelectedItem != null) {
+        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
 
+        if (TodoToUpdate.TodoInfoValidator()) {
+          ViewModel.UpdateTodoItem(ViewModel.SelectedItem.Id, TodoToUpdate);
+        }
+      }
+    }
+
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e) {
+      ViewModel.SelectedItem = null;
+      SideGrid_Set();
     }
   }
 }

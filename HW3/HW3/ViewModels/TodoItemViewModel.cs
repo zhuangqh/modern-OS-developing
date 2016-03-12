@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace HW3.ViewModels {
   public class TodoItemViewModel {
-    private ObservableCollection<Models.TodoItem> Items = new ObservableCollection<Models.TodoItem>();
-    public ObservableCollection<Models.TodoItem> AllItems { get { return this.Items; } }
+    public ObservableCollection<Models.TodoItem> Items = new ObservableCollection<Models.TodoItem>();
+    public ObservableCollection<Models.TodoItem> AllItems { get { return this.Items; }}
 
     private Models.TodoItem selectedItem = default(Models.TodoItem);
     public Models.TodoItem SelectedItem {
