@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Popups;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -31,6 +32,14 @@ namespace HW3 {
     protected override void OnNavigatedTo(NavigationEventArgs e) {
       if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
         this.ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
+        if (ViewModel.SelectedItem == null) {
+          UpdateButton.Visibility = Visibility.Collapsed;
+        } else {
+          CreateButton.Visibility = Visibility.Collapsed;
+          TitleTextBox.Text = ViewModel.SelectedItem.Title;
+          DetailTextBox.Text = ViewModel.SelectedItem.Discription;
+          DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
+        }
       }
     }
 
@@ -43,8 +52,21 @@ namespace HW3 {
       Frame.Navigate(typeof(AddTodoPage), ViewModel);
     }
 
-    private void Complete_Checked(object sender, RoutedEventArgs e) {
+    private void fuck(object sender, ItemClickEventArgs e) {
+      ViewModel.SelectedItem = (e.ClickedItem as Models.TodoItem);
       
+    }
+
+    private void CreateButton_Click(object sender, RoutedEventArgs e) {
+
+    }
+
+    private void CancelButton_Click(object sender, RoutedEventArgs e) {
+
+    }
+
+    private void UpdateButton_Click(object sender, RoutedEventArgs e) {
+
     }
   }
 }

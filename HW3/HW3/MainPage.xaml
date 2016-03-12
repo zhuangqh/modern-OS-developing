@@ -14,6 +14,10 @@
         </CommandBar>
     </Page.BottomAppBar>
 
+    <Page.Resources>
+        <md:BoolToVisibilityConverter x:Key="BoolToVisConverter" />
+    </Page.Resources>
+
     <Grid x:Name="All" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="VisualStateGroup">
@@ -49,7 +53,7 @@
             
             <!-- Todo item's view-->
             <ScrollViewer x:Name="TodoScrollView" Margin="20">
-                <ListView IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.AllItems}"
+                <ListView x:Name="TodoListView" IsItemClickEnabled="True" ItemsSource="{x:Bind ViewModel.AllItems}"
                           ItemClick="TodoItem_ItemClicked">
                     <ListView.ItemTemplate>
                         <DataTemplate x:DataType="md:TodoItem">
@@ -60,10 +64,11 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
 
-                                <CheckBox Grid.Column="0" VerticalAlignment="Center" Height="32" Width="32" Checked="Complete_Checked"/>
+                                <CheckBox x:Name="TodoCheckBox" Grid.Column="0" VerticalAlignment="Center" Height="32" Width="32" IsChecked="{x:Bind Completed}" />
                                 <Image Grid.Column="1" Source="Assets/rayna.jpg" Height="90" Width="90" Margin="0,3,12,7"/>
                                 <TextBlock Text="{x:Bind Title}" Grid.Column="2" VerticalAlignment="Center" Foreground="Black" FontWeight="Normal" FontSize="15" LineHeight="20" TextWrapping="Wrap" />
-                                <Line Grid.Column="2" Stretch="Fill" Stroke="Black" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0"/>
+                                <Line Grid.Column="2" Stretch="Fill" Stroke="Black" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0"
+                                      Visibility="{Binding IsChecked, ElementName=TodoCheckBox, Converter={StaticResource BoolToVisConverter}}"/>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
@@ -82,12 +87,13 @@
                             </Rectangle.RenderTransform>
                         </Rectangle>
                         <Slider Padding="50,0,50,0" Minimum="0.5" Maximum="1.0" StepFrequency="0.1" x:Name="MySlider"/>
-                        <TextBox Width="350" Header="Title" Margin="0,12,0,0" />
-                        <TextBox Width="350" Height="96" Margin="0,12,0,0" Header="Details" />
-                        <DatePicker Width="350" Margin="0,12,0,0" Header="Due Date" HorizontalAlignment="Center" />
+                        <TextBox x:Name="TitleTextBox" Width="350" Header="Title" Margin="0,12,0,0" />
+                        <TextBox x:Name="DetailTextBox" Width="350" Height="96" Margin="0,12,0,0" Header="Details" />
+                        <DatePicker x:Name="DueDatePicker" Width="350" Margin="0,12,0,0" Header="Due Date" HorizontalAlignment="Center" />
                         <RelativePanel Width="350" Margin="0,24,0,0">
-                            <Button Content="Create"></Button>
-                            <Button Content="Cancel" RelativePanel.AlignRightWithPanel="True"></Button>
+                            <Button x:Name="CreateButton" Content="Create" Click="CreateButton_Click"></Button>
+                            <Button x:Name="UpdateButton" Content="Update" Click="UpdateButton_Click"></Button>
+                            <Button x:Name="CancelButton" Content="Cancel" RelativePanel.AlignRightWithPanel="True" Click="CancelButton_Click"></Button>
                         </RelativePanel>
                     </StackPanel>
                 </ScrollViewer>

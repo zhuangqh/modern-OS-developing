@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using Windows.UI.Popups;
+using Windows.UI.Xaml;
 
 namespace HW3.Models {
   public class TodoItem {
@@ -13,7 +15,7 @@ namespace HW3.Models {
 
     public string Discription { get; set; }
 
-    public bool Completed { get; set; }
+    public bool? Completed { get; set; }
 
     public DateTime DueDate { get; set; }
 
@@ -21,7 +23,7 @@ namespace HW3.Models {
       this.Id = Guid.NewGuid().ToString();
       this.Title = title;
       this.Discription = discription;
-      this.Completed = false;
+      this.Completed = true;
       this.DueDate = duedate.DateTime;
     }
 
