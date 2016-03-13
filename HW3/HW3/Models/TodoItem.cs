@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace HW3.Models {
   public class TodoItem {
@@ -19,12 +21,15 @@ namespace HW3.Models {
 
     public DateTime DueDate { get; set; }
 
-    public TodoItem(string title, string discription, DateTimeOffset duedate) {
+    public ImageSource ImagePath { get; set; }
+
+    public TodoItem(string title, string discription, DateTimeOffset duedate, ImageSource imagepath) {
       this.Id = Guid.NewGuid().ToString();
       this.Title = title;
       this.Discription = discription;
       this.Completed = false;
       this.DueDate = duedate.DateTime;
+      this.ImagePath = imagepath;
     }
 
     // validata the Todo's information
@@ -57,6 +62,7 @@ namespace HW3.Models {
       this.Title = UpdateInfo.Title;
       this.Discription = UpdateInfo.Discription;
       this.DueDate = UpdateInfo.DueDate;
+      this.ImagePath = UpdateInfo.ImagePath;
     }
   }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HW3.ViewModels {
   public class TodoItemViewModel {
-    public ObservableCollection<Models.TodoItem> Items = new ObservableCollection<Models.TodoItem>();
+    private ObservableCollection<Models.TodoItem> Items = new ObservableCollection<Models.TodoItem>();
     public ObservableCollection<Models.TodoItem> AllItems { get { return this.Items; }}
 
     private Models.TodoItem selectedItem = default(Models.TodoItem);
@@ -16,15 +16,7 @@ namespace HW3.ViewModels {
       set { this.selectedItem = value; }
     }
 
-    public TodoItemViewModel() {
-      // 用于测试
-      this.Items.Add(new Models.TodoItem("haha", "xixixi", DateTimeOffset.Now));
-      this.Items.Add(new Models.TodoItem("hhh", "xixixixixi", DateTimeOffset.Now));
-    }
-
-    public void AddTodoItem(string title, string discription, DateTimeOffset duetime) {
-      this.Items.Add(new Models.TodoItem(title, discription, duetime));
-    }
+    public TodoItemViewModel() {}
 
     public void AddTodoItem(Models.TodoItem todo) {
       this.Items.Add(todo);
@@ -35,10 +27,10 @@ namespace HW3.ViewModels {
       this.selectedItem = null;
     }
 
-    public void UpdateTodoItem(string id, Models.TodoItem UpdateInfo) {
-      Models.TodoItem ItemToUpdate = this.Items.FirstOrDefault(i => i.Id == id);
-      if (ItemToUpdate != null) {
-        ItemToUpdate.Update(ref UpdateInfo);
+    public void UpdateTodoItem(Models.TodoItem OriginTodo, Models.TodoItem UpdateInfo) {
+      int index = this.Items.IndexOf(OriginTodo);
+      if (index >= 0 && index < this.Items.Count) {
+        this.Items[index] = UpdateInfo;
       }
       this.selectedItem = null;
     }

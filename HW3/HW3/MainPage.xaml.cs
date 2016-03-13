@@ -14,6 +14,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Popups;
+using Windows.Storage.Pickers;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.UI.Xaml.Media.Imaging;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -32,7 +36,7 @@ namespace HW3 {
 
     public ViewModels.TodoItemViewModel ViewModel { get; set; }
 
-    private bool SideGridShow { get; set; }  // 记录右边的编辑框显示与否
+    private bool SideGridShow { get; set; }  // whether the side grid show or not
 
     protected override void OnNavigatedTo(NavigationEventArgs e) {
       if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
@@ -41,9 +45,10 @@ namespace HW3 {
       }
     }
 
-    // 设置右边编辑框的信息
+    // set info of the side grid in right
     private void SideGrid_Set() {
       if (ViewModel.SelectedItem == null) {
+        // default style
         CreateButton.Visibility = Visibility.Visible;
         UpdateButton.Visibility = Visibility.Collapsed;
         TitleTextBox.Text = string.Empty;
@@ -55,11 +60,13 @@ namespace HW3 {
         TitleTextBox.Text = ViewModel.SelectedItem.Title;
         DetailTextBox.Text = ViewModel.SelectedItem.Discription;
         DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
+        SlideImage.Source = ViewModel.SelectedItem.ImagePath;
       }
     }
 
     private void AddTodoButton_Click(object sender, RoutedEventArgs e) {
-      Frame.Navigate(typeof(AddTodoPage), ViewModel);
+      if (!SideGridShow)
+        Frame.Navigate(typeof(AddTodoPage), ViewModel);
     }
 
     private void TodoItem_ItemClicked(object sender, ItemClickEventArgs e) {
@@ -70,26 +77,56 @@ namespace HW3 {
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
-      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text,
+        DetailTextBox.Text, DueDatePicker.Date, SlideImage.Source);
+
       if (TodoToCreate.TodoInfoValidator()) {
         ViewModel.AddTodoItem(TodoToCreate);
       }
     }
 
+    // update Todo's info and refresh page
     private void UpdateButton_Click(object sender, RoutedEventArgs e) {
       if (ViewModel.SelectedItem != null) {
-        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text,
+          DetailTextBox.Text, DueDatePicker.Date, SlideImage.Source);
+        TodoToUpdate.Id = ViewModel.SelectedItem.Id;
 
         if (TodoToUpdate.TodoInfoValidator()) {
-          ViewModel.UpdateTodoItem(ViewModel.SelectedItem.Id, TodoToUpdate);
+          ViewModel.UpdateTodoItem(ViewModel.SelectedItem, TodoToUpdate);
+          SideGrid_Set();
         }
       }
     }
 
-
+    // unselect the TodoItem
+    // let it enable to create one
     private void CancelButton_Click(object sender, RoutedEventArgs e) {
       ViewModel.SelectedItem = null;
       SideGrid_Set();
+    }
+
+    private async void SelectPictureButton_Click(object sender, RoutedEventArgs e) {
+      FileOpenPicker picker = new FileOpenPicker();
+      // set format
+      picker.ViewMode = PickerViewMode.Thumbnail;
+      picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+      picker.FileTypeFilter.Add(".jpg");
+      picker.FileTypeFilter.Add(".jpeg");
+      picker.FileTypeFilter.Add(".png");
+
+      // Open a stream for the selected file 
+      StorageFile file = await picker.PickSingleFileAsync();
+      // Ensure a file was selected 
+      if (file != null) {
+        using (IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
+          // Set the image source to the selected bitmap 
+          BitmapImage bitmapImage = new BitmapImage();
+          bitmapImage.DecodePixelWidth = 350; //match the target Image.Width, not shown
+          await bitmapImage.SetSourceAsync(fileStream);
+          SlideImage.Source = bitmapImage;
+        }
+      }
     }
   }
 }

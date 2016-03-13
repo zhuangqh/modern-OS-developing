@@ -38,14 +38,12 @@ namespace HW3 {
         UpdateButton.Visibility = Visibility.Collapsed;
       } else {
         CreateButton.Visibility = Visibility.Collapsed;
-        TitleTextBox.Text = ViewModel.SelectedItem.Title;
-        DetailTextBox.Text = ViewModel.SelectedItem.Discription;
         DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
       }
     }
 
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
-      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
+      Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date, TodoImage.Source);
       if (TodoToCreate.TodoInfoValidator()) {
         ViewModel.AddTodoItem(TodoToCreate);
         Frame.Navigate(typeof(MainPage), ViewModel);
@@ -65,10 +63,10 @@ namespace HW3 {
 
     private void UpdateButton_Click(object sender, RoutedEventArgs e) {
       if (ViewModel.SelectedItem != null) {
-        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date);
-
+        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date, TodoImage.Source);
+        TodoToUpdate.Id = ViewModel.SelectedItem.Id;
         if (TodoToUpdate.TodoInfoValidator()) {
-          ViewModel.UpdateTodoItem(ViewModel.SelectedItem.Id, TodoToUpdate);
+          ViewModel.UpdateTodoItem(ViewModel.SelectedItem, TodoToUpdate);
           Frame.Navigate(typeof(MainPage), ViewModel);
         }
       }

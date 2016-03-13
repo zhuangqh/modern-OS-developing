@@ -84,7 +84,7 @@
                                     </Grid.ColumnDefinitions>
 
                                     <CheckBox x:Name="TodoCheckBox" Grid.Column="0" VerticalAlignment="Center" Height="32" Width="32" IsChecked="{x:Bind Completed}" />
-                                    <Image x:Name="TodoImage"  Grid.Column="1" Source="Assets/rayna.jpg" Height="90" Width="90" Margin="0,3,12,7" />
+                                    <Image x:Name="TodoImage"  Grid.Column="1" Source="{x:Bind ImagePath}" Height="90" Width="90" Margin="0,3,12,7" />
                                     <TextBlock Text="{x:Bind Title}" Grid.Column="2" VerticalAlignment="Center" Foreground="Black" FontWeight="Normal" FontSize="15" LineHeight="20" TextWrapping="Wrap" />
                                     <Line Grid.Column="2" Stretch="Fill" Stroke="Black" StrokeThickness="2" X1="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" Margin="0,0,20,0"
                                       Visibility="{Binding IsChecked, ElementName=TodoCheckBox, Converter={StaticResource BoolToVisConverter}}"/>
@@ -100,12 +100,15 @@
                 <ScrollViewer Margin="20">
                     <StackPanel>
 
-                        <Rectangle Width="350" Height="180" Margin="4" Fill="LightBlue" RenderTransformOrigin="0.5,0.5">
-                            <Rectangle.RenderTransform>
+                        <Image x:Name="SlideImage" Width="350" Height="180" Source="Assets/rayna.jpg" RenderTransformOrigin="0.5,0.5">
+                            <Image.RenderTransform>
                                 <CompositeTransform ScaleX="{Binding Value, ElementName=MySlider}"
-                                        ScaleY="{Binding Value, ElementName=MySlider}"/>
-                            </Rectangle.RenderTransform>
-                        </Rectangle>
+                                                    ScaleY="{Binding Value, ElementName=MySlider}"/>
+                            </Image.RenderTransform>
+                        </Image>
+                        <RelativePanel Width="350">
+                            <AppBarButton x:Name="SelectPictureButton" Icon="Pictures" Label="select" RelativePanel.AlignRightWithPanel="True" Click="SelectPictureButton_Click"/>
+                        </RelativePanel>
                         <Slider Padding="50,0,50,0" Minimum="0.5" Maximum="1.0" StepFrequency="0.1" x:Name="MySlider"/>
                         <TextBox x:Name="TitleTextBox" Width="350" Header="Title" Margin="0,12,0,0" />
                         <TextBox x:Name="DetailTextBox" Width="350" Height="96" Margin="0,12,0,0" Header="Details" />
