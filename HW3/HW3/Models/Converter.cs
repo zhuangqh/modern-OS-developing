@@ -17,5 +17,4 @@ namespace HW3.Models {
       return Vis == Visibility.Collapsed ? false : true;
     }
   }
-
 }
