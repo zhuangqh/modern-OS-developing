@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
+using Windows.Storage;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
 namespace HW4 {
@@ -30,6 +22,16 @@ namespace HW4 {
         Microsoft.ApplicationInsights.WindowsCollectors.Session);
       this.InitializeComponent();
       this.Suspending += OnSuspending;
+      this.Resuming += OnResuming;
+    }
+
+    public bool IsSuspending = false;
+
+    private void OnResuming(object sender, object e) {
+      // TODO: whatever you need to do to resume your app
+
+      // Clear the IsSuspending flag
+      IsSuspending = false;
     }
 
     /// <summary>
@@ -57,6 +59,9 @@ namespace HW4 {
 
         if (e.PreviousExecutionState == ApplicationExecutionState.Terminated) {
           //TODO: 从之前挂起的应用程序加载状态
+          if (ApplicationData.Current.LocalSettings.Values.ContainsKey("NavigationState")) {
+            rootFrame.SetNavigationState((string)ApplicationData.Current.LocalSettings.Values["NavigationState"]);
+          }
         }
 
         // 将框架放在当前窗口中
@@ -71,6 +76,20 @@ namespace HW4 {
       }
       // 确保当前窗口处于活动状态
       Window.Current.Activate();
+
+      SystemNavigationManager.GetForCurrentView().BackRequested += OnBackRequested;
+
+      // Every time the Frame navigates, set the visibility of the Shell-drawn back button 
+      // appropriate to whether there is anywhere to go back to
+      rootFrame.Navigated += (s, a) =>
+      {
+        if (rootFrame.CanGoBack) {
+          // Setting this visible is ignored on Mobile and when in tablet mode!     
+          SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+        } else {
+          SystemNavigationManager.GetForCurrentView().AppViewBackButtonVisibility = AppViewBackButtonVisibility.Collapsed;
+        }
+      };
     }
 
     /// <summary>
@@ -92,19 +111,29 @@ namespace HW4 {
     private void OnSuspending(object sender, SuspendingEventArgs e) {
       var deferral = e.SuspendingOperation.GetDeferral();
       //TODO: 保存应用程序状态并停止任何后台活动
+
+      // Set this flag - this happens before the page navigatedfrom
+      IsSuspending = true;
+
+      // Get the frame navigation state serialized as a string and save in settings
+      Frame frame = Window.Current.Content as Frame;
+      ApplicationData.Current.LocalSettings.Values["NavigationState"] = frame.GetNavigationState();
       deferral.Complete();
     }
 
-    private void OnBackRequested(object sender, Windows.UI.Core.BackRequestedEventArgs e) {
-      Frame rootFrame = Window.Current.Content as Frame;
-      if (rootFrame == null)
-        return;
+    public event EventHandler<Windows.UI.Core.BackRequestedEventArgs> BackRequested;
 
-      // Navigate back if possible, and if the event has not 
-      // already been handled .
-      if (rootFrame.CanGoBack && e.Handled == false) {
-        e.Handled = true;
-        rootFrame.GoBack();
+    private void OnBackRequested(object sender, Windows.UI.Core.BackRequestedEventArgs e) {
+      // Fire the event - allows pages/Viewmodels to override/augment default back navigation behavior
+      if (BackRequested != null) {
+        BackRequested(this, e);
+      }
+      if (!e.Handled) {
+        Frame frame = Window.Current.Content as Frame;
+        if (frame.CanGoBack) {
+          frame.GoBack();
+          e.Handled = true;
+        }
       }
     }
   }
