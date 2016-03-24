@@ -6,6 +6,8 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI.Notifications;
+using NotificationsExtensions.Tiles;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -27,7 +29,6 @@ namespace HW5 {
       }
     }
 
-
     private void AddTodoButton_Click(object sender, RoutedEventArgs e) {
       Frame.Navigate(typeof(NewPage), ViewModel);
     }
@@ -38,7 +39,76 @@ namespace HW5 {
     }
 
     private void UpdateTileButton_Click(object sender, RoutedEventArgs e) {
+      // In a real app, these would be initialized with actual data
+      string from = ViewModel.AllItems[0].Title;
+      string body = ViewModel.AllItems[0].Discription;
 
+
+      // Construct the tile content
+      TileContent content = new TileContent() {
+        Visual = new TileVisual() {
+          Branding = TileBranding.NameAndLogo,
+          DisplayName = "Todos",
+
+          TileSmall = new TileBinding() {
+            Content = new TileBindingContentAdaptive() {
+              Children =
+                      {
+                    new TileText()
+                    {
+                        Text = from,
+                        Style = TileTextStyle.Subtitle
+                    },
+                    new TileText()
+                    {
+                        Text = body,
+                        Style = TileTextStyle.CaptionSubtle
+                    }
+                }
+            }
+          },
+
+          TileMedium = new TileBinding() {
+            Content = new TileBindingContentAdaptive() {
+              Children =
+                      {
+                    new TileText()
+                    {
+                        Text = from,
+                        Style = TileTextStyle.Subtitle
+                    },
+                    new TileText()
+                    {
+                        Text = body,
+                        Style = TileTextStyle.CaptionSubtle
+                    }
+                }
+            }
+          },
+
+          TileWide = new TileBinding() {
+            Content = new TileBindingContentAdaptive() {
+              Children =
+                      {
+                    new TileText()
+                    {
+                        Text = from,
+                        Style = TileTextStyle.Subtitle
+                    },
+                    new TileText()
+                    {
+                        Text = body,
+                        Style = TileTextStyle.CaptionSubtle
+                    }
+                }
+            }
+          }
+        }
+      };
+
+      var notification = new TileNotification(content.GetXml());
+      // send the notification
+      TileUpdateManager.CreateTileUpdaterForApplication().Update(notification);
     }
   }
 }

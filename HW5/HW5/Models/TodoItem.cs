@@ -29,6 +29,14 @@ namespace HW5.Models {
       this.ImagePath = imagepath;
     }
 
+    public TodoItem() {
+      this.Id = Guid.NewGuid().ToString();
+      this.Title = "hhhhh";
+      this.Discription = "jkjkjkjkj";
+      this.DueDate = DateTime.Now;
+      this.Completed = false;
+    }
+
     // validata the Todo's information
     // notify if invalid
     public bool TodoInfoValidator() {

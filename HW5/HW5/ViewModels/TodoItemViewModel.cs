@@ -12,7 +12,10 @@ namespace HW5.ViewModels {
       set { this.selectedItem = value; }
     }
 
-    public TodoItemViewModel() { }
+    public TodoItemViewModel() {
+      this.AllItems.Add(new Models.TodoItem());
+      this.AllItems.Add(new Models.TodoItem());
+    }
 
     public void AddTodoItem(Models.TodoItem todo) {
       this.Items.Add(todo);
