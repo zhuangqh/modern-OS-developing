@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.IO;
-using System.Xml.Serialization;
-using Windows.Graphics.Imaging;
 using Windows.Storage;
 using Windows.UI.Popups;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace HW4.Models {
   public class EditPanelData {
