@@ -13,7 +13,7 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"  AllowDrop="True">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
@@ -26,7 +26,7 @@
                     <StackPanel.Background>
                         <ImageBrush Stretch="Fill"/>
                     </StackPanel.Background>
-                    <Image x:Name="TodoImage"  Source="{x:Bind ViewModel.SelectedItem.ImagePath}" Width="350" Height="180" Stretch="Fill"/>
+                    <Image x:Name="TodoImage"  Source="{x:Bind ViewModel.SelectedItem.ImagePath}" Width="350" Height="180" Stretch="Fill" />
                     <RelativePanel Width="350">
                         <AppBarButton x:Name="SelectPictureButton" Icon="Pictures" Label="select" RelativePanel.AlignRightWithPanel="True" Click="SelectPictureButton_Click"/>
                     </RelativePanel>

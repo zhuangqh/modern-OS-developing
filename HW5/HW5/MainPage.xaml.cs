@@ -1,13 +1,9 @@
-﻿using System;
-using Windows.Storage;
-using Windows.Storage.Pickers;
-using Windows.Storage.Streams;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 using Windows.UI.Notifications;
 using NotificationsExtensions.Tiles;
+using Windows.UI.Popups;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -39,6 +35,10 @@ namespace HW5 {
     }
 
     private void UpdateTileButton_Click(object sender, RoutedEventArgs e) {
+      if (ViewModel.NewestItem == null) {
+        var i = new MessageDialog("There is no Todo Item!").ShowAsync();
+        return;
+      }
       // In a real app, these would be initialized with actual data
       string from = ViewModel.NewestItem.Title;
       string body = ViewModel.NewestItem.Discription;

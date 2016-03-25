@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
@@ -7,7 +6,6 @@ using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -81,6 +79,10 @@ namespace HW5 {
     private void DeleteTodoButton_Click(object sender, RoutedEventArgs e) {
       if (ViewModel.SelectedItem != null) {
         ViewModel.DeleteTodoItem(ViewModel.SelectedItem.Id);
+        if (ViewModel.AllItems.Count > 0)
+          ViewModel.NewestItem = ViewModel.AllItems[0];
+        else
+          ViewModel.NewestItem = null;
         Frame.Navigate(typeof(MainPage), ViewModel);
       }
     }
@@ -134,8 +136,10 @@ namespace HW5 {
       try {
         data.Properties.Title = ViewModel.SelectedItem.Title;
         data.Properties.Description = "A todo item from APP: Todos";
-        data.Properties.Thumbnail = RandomAccessStreamReference.CreateFromFile(ImageFile);
-        data.SetBitmap(RandomAccessStreamReference.CreateFromFile(ImageFile));
+        if (ImageFile != null) {
+          data.Properties.Thumbnail = RandomAccessStreamReference.CreateFromFile(ImageFile);
+          data.SetBitmap(RandomAccessStreamReference.CreateFromFile(ImageFile));
+        }
         //data.SetText(ViewModel.SelectedItem.Discription);
       } finally {
         GetFiles.Complete();
@@ -143,5 +147,6 @@ namespace HW5 {
       
     }
     #endregion
+
   }
 }
