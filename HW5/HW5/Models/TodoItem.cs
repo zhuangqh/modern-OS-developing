@@ -31,10 +31,11 @@ namespace HW5.Models {
 
     public TodoItem() {
       this.Id = Guid.NewGuid().ToString();
-      this.Title = "hhhhh";
-      this.Discription = "jkjkjkjkj";
+      this.Title = "本周任务";
+      this.Discription = "完成现操作业";
       this.DueDate = DateTime.Now;
       this.Completed = false;
+      //this.ImagePath = 
     }
 
     // validata the Todo's information

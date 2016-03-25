@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
@@ -20,6 +23,8 @@ namespace HW5 {
 
     private ViewModels.TodoItemViewModel ViewModel;
 
+    private StorageFile ImageFile;
+
     protected override void OnNavigatedTo(NavigationEventArgs e) {
       ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
       if (ViewModel.SelectedItem == null) {
@@ -28,8 +33,15 @@ namespace HW5 {
         CreateButton.Visibility = Visibility.Collapsed;
         DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
       }
+
+      DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
     }
 
+    protected override void OnNavigatedFrom(NavigationEventArgs e) {
+      DataTransferManager.GetForCurrentView().DataRequested -= OnShareDataRequested;
+    }
+
+    #region TodoItem controller
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
       Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date, TodoImage.Source);
       if (TodoToCreate.TodoInfoValidator()) {
@@ -71,10 +83,10 @@ namespace HW5 {
       picker.FileTypeFilter.Add(".png");
 
       // Open a stream for the selected file 
-      StorageFile file = await picker.PickSingleFileAsync();
+      ImageFile = await picker.PickSingleFileAsync();
       // Ensure a file was selected 
-      if (file != null) {
-        using (IRandomAccessStream fileStream = await file.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
+      if (ImageFile != null) {
+        using (IRandomAccessStream fileStream = await ImageFile.OpenAsync(Windows.Storage.FileAccessMode.Read)) {
           // Set the image source to the selected bitmap 
           BitmapImage bitmapImage = new BitmapImage();
           bitmapImage.DecodePixelWidth = 350; //match the target Image.Width, not shown
@@ -83,9 +95,29 @@ namespace HW5 {
         }
       }
     }
+    #endregion
 
+    #region Share controller
     private void ShareButton_Click(object sender, RoutedEventArgs e) {
-
+      DataTransferManager.ShowShareUI();
     }
+
+    // Handle DataRequested event and provide DataPackage
+    private void OnShareDataRequested(DataTransferManager sender, DataRequestedEventArgs args) {
+      var data = args.Request.Data;
+      DataRequestDeferral GetFiles = args.Request.GetDeferral();
+
+      try {
+        data.Properties.Title = ViewModel.SelectedItem.Title;
+        data.Properties.Description = "A todo item from APP: Todos";
+        data.Properties.Thumbnail = RandomAccessStreamReference.CreateFromFile(ImageFile);
+        data.SetBitmap(RandomAccessStreamReference.CreateFromFile(ImageFile));
+        //data.SetText(ViewModel.SelectedItem.Discription);
+      } finally {
+        GetFiles.Complete();
+      }
+      
+    }
+    #endregion
   }
 }
