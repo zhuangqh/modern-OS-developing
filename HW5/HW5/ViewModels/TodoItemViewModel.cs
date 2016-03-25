@@ -7,14 +7,15 @@ namespace HW5.ViewModels {
     public ObservableCollection<Models.TodoItem> AllItems { get { return this.Items; } }
 
     private Models.TodoItem selectedItem = default(Models.TodoItem);
-    public Models.TodoItem SelectedItem {
-      get { return selectedItem; }
-      set { this.selectedItem = value; }
-    }
+    public Models.TodoItem SelectedItem { get; set; }
+
+    private Models.TodoItem newestItem = default(Models.TodoItem);
+    public Models.TodoItem NewestItem { get; set; }
 
     public TodoItemViewModel() {
       this.AllItems.Add(new Models.TodoItem());
       this.AllItems.Add(new Models.TodoItem());
+      this.NewestItem = new Models.TodoItem();
     }
 
     public void AddTodoItem(Models.TodoItem todo) {

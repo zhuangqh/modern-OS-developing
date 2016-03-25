@@ -40,8 +40,8 @@ namespace HW5 {
 
     private void UpdateTileButton_Click(object sender, RoutedEventArgs e) {
       // In a real app, these would be initialized with actual data
-      string from = ViewModel.AllItems[0].Title;
-      string body = ViewModel.AllItems[0].Discription;
+      string from = ViewModel.NewestItem.Title;
+      string body = ViewModel.NewestItem.Discription;
 
 
       // Construct the tile content
@@ -58,11 +58,6 @@ namespace HW5 {
                     {
                         Text = from,
                         Style = TileTextStyle.Subtitle
-                    },
-                    new TileText()
-                    {
-                        Text = body,
-                        Style = TileTextStyle.CaptionSubtle
                     }
                 }
             }

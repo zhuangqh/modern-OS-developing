@@ -6,8 +6,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
-    <Page.BottomAppBar>
-        <CommandBar>
+    <Page.BottomAppBar >
+        <CommandBar x:Name="CommandBar">
             <AppBarButton x:Name="DeleteTodoButton" Icon="Delete" Label="delete" Click="DeleteTodoButton_Click" />
             <AppBarButton x:Name="ShareButton" Icon="ReShare" Label="Share" Click="ShareButton_Click"></AppBarButton>
         </CommandBar>

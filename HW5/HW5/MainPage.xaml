@@ -23,6 +23,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="Title" Grid.Row="0" Text="Todos" Style="{StaticResource HeaderTextBlockStyle}" FontFamily="Monaco" Margin="10,10,0,0" />
@@ -52,6 +53,6 @@
                 </ListView>
             </ScrollViewer>
         </Grid>
-        <Button Content="Update Tile"  Grid.Row="1" HorizontalAlignment="center" x:Name="UpdateTileButton" Click="UpdateTileButton_Click"/>
+        <Button Grid.Row="2" Content="Update Tile"  HorizontalAlignment="center" x:Name="UpdateTileButton" Click="UpdateTileButton_Click"/>
     </Grid>
 </Page>

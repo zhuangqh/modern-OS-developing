@@ -1,6 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -110,6 +111,21 @@ namespace HW5 {
         e.Handled = true;
         rootFrame.GoBack();
       }
+    }
+
+    // Override OnShareTargetActivated and redirect user to sharing page
+    protected override void OnShareTargetActivated(ShareTargetActivatedEventArgs args) {
+      Frame rootFrame = Window.Current.Content as Frame;
+
+      if (rootFrame == null) {
+        rootFrame = new Frame();
+        Window.Current.Content = rootFrame;
+      }
+
+      if (rootFrame.Content == null)
+        rootFrame.Navigate(typeof(NewPage), args.ShareOperation);
+
+      Window.Current.Activate();
     }
   }
 }

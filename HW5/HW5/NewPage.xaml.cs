@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Windows.ApplicationModel.DataTransfer;
+using Windows.ApplicationModel.DataTransfer.ShareTarget;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
@@ -19,22 +20,39 @@ namespace HW5 {
   public sealed partial class NewPage : Page {
     public NewPage() {
       this.InitializeComponent();
+      ViewModel = new ViewModels.TodoItemViewModel();
     }
 
     private ViewModels.TodoItemViewModel ViewModel;
 
     private StorageFile ImageFile;
 
-    protected override void OnNavigatedTo(NavigationEventArgs e) {
-      ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
+    private ShareOperation shareOp;
+
+    protected async override void OnNavigatedTo(NavigationEventArgs e) {
+      if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
+        ViewModel = e.Parameter as ViewModels.TodoItemViewModel;
+      } else if (e.Parameter.GetType() == typeof(ShareOperation)) {
+        // handle event as a sharing target
+        shareOp = (e.Parameter as ShareOperation);
+        if (shareOp.Data.Contains(StandardDataFormats.Text)) {
+          string text = await shareOp.Data.GetTextAsync();
+          DetailTextBox.Text = text;
+        }
+      }
+      SetButton();
+      DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
+    }
+
+    // determine what to be shown in NewPage
+    private void SetButton() {
       if (ViewModel.SelectedItem == null) {
+        CommandBar.Visibility = Visibility.Collapsed;
         UpdateButton.Visibility = Visibility.Collapsed;
       } else {
         CreateButton.Visibility = Visibility.Collapsed;
         DueDatePicker.Date = ViewModel.SelectedItem.DueDate;
       }
-
-      DataTransferManager.GetForCurrentView().DataRequested += OnShareDataRequested;
     }
 
     protected override void OnNavigatedFrom(NavigationEventArgs e) {
@@ -44,9 +62,14 @@ namespace HW5 {
     #region TodoItem controller
     private void CreateButton_Click(object sender, RoutedEventArgs e) {
       Models.TodoItem TodoToCreate = new Models.TodoItem(TitleTextBox.Text, DetailTextBox.Text, DueDatePicker.Date, TodoImage.Source);
-      if (TodoToCreate.TodoInfoValidator()) {
-        ViewModel.AddTodoItem(TodoToCreate);
-        Frame.Navigate(typeof(MainPage), ViewModel);
+      if (shareOp == null) {
+        if (TodoToCreate.TodoInfoValidator()) {
+          ViewModel.AddTodoItem(TodoToCreate);
+          ViewModel.NewestItem = TodoToCreate;
+          Frame.Navigate(typeof(MainPage), ViewModel);
+        }
+      } else { // on sharing
+        shareOp.ReportCompleted();
       }
     }
 
@@ -68,6 +91,7 @@ namespace HW5 {
         TodoToUpdate.Id = ViewModel.SelectedItem.Id;
         if (TodoToUpdate.TodoInfoValidator()) {
           ViewModel.UpdateTodoItem(ViewModel.SelectedItem, TodoToUpdate);
+          ViewModel.NewestItem = TodoToUpdate;
           Frame.Navigate(typeof(MainPage), ViewModel);
         }
       }
