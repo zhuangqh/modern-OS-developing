@@ -10,3 +10,12 @@ Course Modern Operating System Develop from SYSU
 3. HW3
   - adaptive UI
   - data binding
+4. HW4
+  - application life cycle
+  - data persistence
+5. HW5
+  - live tiles
+  - sharing source
+  - sharing target
+6. HW6
+  - SQLite
