@@ -6,6 +6,7 @@ using NotificationsExtensions.Tiles;
 using Windows.UI.Popups;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
+using SQLitePCL;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -17,11 +18,14 @@ namespace HW6 {
     public MainPage() {
       this.InitializeComponent();
       this.ViewModel = new ViewModels.TodoItemViewModel();
+      db = new Services.DBService();
     }
 
     public ViewModels.TodoItemViewModel ViewModel { get; set; }
 
     private string currentId { get; set; }
+
+    private Services.DBService db { get; set; }
 
     #region View Controller
     protected override void OnNavigatedTo(NavigationEventArgs e) {
@@ -146,5 +150,9 @@ namespace HW6 {
       }
     }
     #endregion
+
+    private void QueryButton_Click(object sender, RoutedEventArgs e) {
+      db.GetItemsByStr(Query.Text);
+    }
   }
 }

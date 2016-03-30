@@ -20,6 +20,7 @@ namespace HW6 {
     public NewPage() {
       this.InitializeComponent();
       ViewModel = new ViewModels.TodoItemViewModel();
+      DB = new Services.DBService();
     }
 
     private ViewModels.TodoItemViewModel ViewModel;
@@ -27,6 +28,8 @@ namespace HW6 {
     private ShareOperation shareOp;
 
     private StorageFile ImageFile;
+
+    private Services.DBService DB { get; set; }
 
     protected async override void OnNavigatedTo(NavigationEventArgs e) {
       if (e.Parameter.GetType() == typeof(ViewModels.TodoItemViewModel)) {
@@ -60,6 +63,7 @@ namespace HW6 {
       if (shareOp == null) {
         if (TodoToCreate.TodoInfoValidator()) {
           ViewModel.AddTodoItem(TodoToCreate);
+          DB.CreateItem(TodoToCreate);  // create an item in database
           ViewModel.NewestItem = TodoToCreate;
           Frame.Navigate(typeof(MainPage), ViewModel);
         }
@@ -80,6 +84,7 @@ namespace HW6 {
           ViewModel.NewestItem = ViewModel.AllItems[0];
         else
           ViewModel.NewestItem = null;
+        DB.DeleteById(ViewModel.SelectedItem.Id);
         Frame.Navigate(typeof(MainPage), ViewModel);
       }
     }
@@ -95,6 +100,7 @@ namespace HW6 {
         if (TodoToUpdate.TodoInfoValidator()) {
           ViewModel.UpdateTodoItem(ViewModel.SelectedItem, TodoToUpdate);
           ViewModel.NewestItem = TodoToUpdate;
+          DB.UpdateItem(TodoToUpdate);  // update in database
           Frame.Navigate(typeof(MainPage), ViewModel);
         }
       }
