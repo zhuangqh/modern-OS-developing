@@ -1,7 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace HW5.ViewModels {
+namespace HW6.ViewModels {
   public class TodoItemViewModel {
     private ObservableCollection<Models.TodoItem> Items = new ObservableCollection<Models.TodoItem>();
     public ObservableCollection<Models.TodoItem> AllItems { get { return this.Items; } }

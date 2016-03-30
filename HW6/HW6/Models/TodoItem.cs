@@ -7,7 +7,7 @@ using Windows.Storage;
 using Windows.UI.Popups;
 using Windows.UI.Xaml.Media;
 
-namespace HW5.Models {
+namespace HW6.Models {
   public class TodoItem {
     public string Id;
 

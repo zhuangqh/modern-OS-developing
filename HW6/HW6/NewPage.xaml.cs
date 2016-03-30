@@ -12,7 +12,7 @@ using Windows.UI.Xaml.Navigation;
 
 // “空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=234238 上提供
 
-namespace HW5 {
+namespace HW6 {
   /// <summary>
   /// 可用于自身或导航至 Frame 内部的空白页。
   /// </summary>
@@ -88,7 +88,7 @@ namespace HW5 {
       if (ViewModel.SelectedItem != null) {
         // if not update image set to origin
         if (ImageFile == null) ImageFile = ViewModel.SelectedItem.ShareFile;
-        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text, 
+        Models.TodoItem TodoToUpdate = new Models.TodoItem(TitleTextBox.Text,
           DetailTextBox.Text, DueDatePicker.Date, TodoImage.Source, ImageFile);
 
         TodoToUpdate.Id = ViewModel.SelectedItem.Id;
