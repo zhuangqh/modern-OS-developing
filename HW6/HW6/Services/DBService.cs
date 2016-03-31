@@ -49,17 +49,21 @@ namespace HW6.Services {
     }
 
     public List<Models.DisplayItem> GetItemsByStr(string str) {
-      string sql = "SELECT Title, Description, Date FROM Todo WHERE Title LIKE ?";
+      string sql = "SELECT TableId, Title, Description, Date FROM Todo "
+        + "WHERE Title LIKE ? OR Description LIKE ? OR Date LIKE ?";
+      int i, searchKeyNum = 3;
       using (var statement = conn.Prepare(sql)) {
-        statement.Bind(1, "%" + str + "%");
+        for (i = 1; i <= searchKeyNum; ++i)
+          statement.Bind(i, "%" + str + "%");
 
         List<Models.DisplayItem> res = new List<Models.DisplayItem>();
         Models.DisplayItem tmp;
-        while (statement.Step() == SQLiteResult.ROW) {
+        while (statement.Step() == SQLiteResult.ROW) { // get result of one row
           tmp = new Models.DisplayItem() {
-            Title = (string)statement[0],
-            Description = (string)statement[1],
-            Date = (string)statement[2]
+            Id = (Int64)statement[0],
+            Title = (string)statement[1],
+            Description = (string)statement[2],
+            Date = (string)statement[3]
           };
           res.Add(tmp);
         }

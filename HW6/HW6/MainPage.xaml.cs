@@ -158,6 +158,9 @@ namespace HW6 {
       for (int i = 0; i < QueryResult.Count; ++i) {
         ItemInfo += QueryResult[i].ToString() + "\n";
       }
+      if (ItemInfo == "") {
+        ItemInfo = "There is no item in database which is matched to the query!";
+      }
       var message = new MessageDialog(ItemInfo).ShowAsync();
     }
   }
