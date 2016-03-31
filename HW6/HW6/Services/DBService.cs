@@ -29,6 +29,10 @@ namespace HW6.Services {
       LoadDatabase();
     }
 
+    /// <summary>
+    /// Database API
+    /// </summary>
+
     public void CreateItem(Models.TodoItem TodoToCreate) {
       try {
         string sql = "INSERT INTO Todo (ItemId, Title, Description, Date) VALUES (?, ?, ?, ?)";
@@ -44,29 +48,23 @@ namespace HW6.Services {
       }
     }
 
-    public Models.DisplayItem GetItemById(string itemId) {
-      Models.DisplayItem displayItem = null;
-      string sql = "SELECT Title, Description, Date FROM Todo WHERE ItemId = ?";
+    public List<Models.DisplayItem> GetItemsByStr(string str) {
+      string sql = "SELECT Title, Description, Date FROM Todo WHERE Title LIKE ?";
       using (var statement = conn.Prepare(sql)) {
-        statement.Bind(1, itemId);
-        if (SQLiteResult.DONE == statement.Step()) {
-          displayItem = new Models.DisplayItem() {
+        statement.Bind(1, "%" + str + "%");
+
+        List<Models.DisplayItem> res = new List<Models.DisplayItem>();
+        Models.DisplayItem tmp;
+        while (statement.Step() == SQLiteResult.ROW) {
+          tmp = new Models.DisplayItem() {
             Title = (string)statement[0],
             Description = (string)statement[1],
             Date = (string)statement[2]
           };
+          res.Add(tmp);
         }
-        return displayItem;
-      }
-    }
 
-    public void GetItemsByStr(string str) {
-      string sql = "SELECT Title FROM Todo WHERE Title = ?";
-      using (var statement = conn.Prepare(sql)) {
-        statement.Bind(1, str);
-        if (SQLiteResult.DONE == statement.Step()) {
-          var i = new MessageDialog((string)statement[0]).ShowAsync();
-        }
+        return res;
       }
     }
 

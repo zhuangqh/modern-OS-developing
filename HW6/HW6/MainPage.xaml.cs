@@ -7,6 +7,7 @@ using Windows.UI.Popups;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.Storage.Streams;
 using SQLitePCL;
+using System.Collections.Generic;
 
 //“空白页”项模板在 http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409 上有介绍
 
@@ -152,7 +153,12 @@ namespace HW6 {
     #endregion
 
     private void QueryButton_Click(object sender, RoutedEventArgs e) {
-      db.GetItemsByStr(Query.Text);
+      List<Models.DisplayItem> QueryResult = db.GetItemsByStr(Query.Text);
+      string ItemInfo = "";
+      for (int i = 0; i < QueryResult.Count; ++i) {
+        ItemInfo += QueryResult[i].ToString() + "\n";
+      }
+      var message = new MessageDialog(ItemInfo).ShowAsync();
     }
   }
 }
