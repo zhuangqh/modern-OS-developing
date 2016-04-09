@@ -1,0 +1,22 @@
+﻿<Page
+    x:Class="HW7.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:HW7"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <TextBox x:Name="PhoneNum" HorizontalAlignment="Left" Margin="372,157,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="35" Width="319"/>
+        <TextBlock x:Name="ProvinceName" HorizontalAlignment="Left" Margin="372,227,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="32" Width="319" FontSize="16"/>
+        <Button Content="通过json查询" HorizontalAlignment="Left" Margin="538,428,0,0" VerticalAlignment="Top" Click="Submit_json" Height="74" Width="200" FontSize="24.667"/>
+        <Button Content="通过xml查询" HorizontalAlignment="Left" Margin="250,428,0,0" VerticalAlignment="Top" Click="Submit_xml" Height="74" Width="200" FontSize="24.667"/>
+        <TextBlock x:Name="CATName" HorizontalAlignment="Left" Margin="372,280,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="33" Width="319" FontSize="16"/>
+        <TextBlock x:Name="infor" HorizontalAlignment="Left" Height="394" Margin="295,623,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="1020" FontSize="15"/>
+        <TextBlock HorizontalAlignment="Left" Margin="108,154,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26.667" Width="183" Text="手机号码" Height="38"/>
+        <TextBlock HorizontalAlignment="Left" Margin="108,215,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26.667" Width="183" Text="归属地" Height="39"/>
+        <TextBlock HorizontalAlignment="Left" Margin="108,275,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="26.667" Width="183" Text="通信服务商" Height="38"/>
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Height="83" Margin="100,30,0,0" TextWrapping="Wrap" Text="手机归属地查询" VerticalAlignment="Top" Width="591" FontSize="41.667"/>
+    </Grid>
+</Page>

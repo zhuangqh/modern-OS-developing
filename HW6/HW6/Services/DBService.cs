@@ -10,9 +10,9 @@ using Windows.UI.Popups;
 namespace HW6.Services {
   public class DBService {
     private void LoadDatabase() {
-      conn = new SQLiteConnection("Todo.db");
+      conn = new SQLiteConnection("Todos.db");
       string sql = @"CREATE TABLE IF NOT EXISTS "
-                    + "Todo (TableId    INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                    + "Todos (TableId    INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
                           + "ItemId      VARCHAR(140),"
                           + "Title       VARCHAR(140),"
                           + "Description VARCHAR(140),"
@@ -35,7 +35,7 @@ namespace HW6.Services {
 
     public void CreateItem(Models.TodoItem TodoToCreate) {
       try {
-        string sql = "INSERT INTO Todo (ItemId, Title, Description, Date) VALUES (?, ?, ?, ?)";
+        string sql = "INSERT INTO Todos (ItemId, Title, Description, Date) VALUES (?, ?, ?, ?)";
         using (var statement = conn.Prepare(sql)) {
           statement.Bind(1, TodoToCreate.Id);
           statement.Bind(2, TodoToCreate.Title);
@@ -49,7 +49,7 @@ namespace HW6.Services {
     }
 
     public List<Models.DisplayItem> GetItemsByStr(string str) {
-      string sql = "SELECT TableId, Title, Description, Date FROM Todo "
+      string sql = "SELECT TableId, Title, Description, Date FROM Todos "
         + "WHERE Title LIKE ? OR Description LIKE ? OR Date LIKE ?";
       int i, searchKeyNum = 3;
       using (var statement = conn.Prepare(sql)) {
@@ -73,7 +73,7 @@ namespace HW6.Services {
     }
 
     public void UpdateItem(Models.TodoItem TodoToUpdate) {
-      string sql = "UPDATE Todo SET Title = ?, Description = ?, Date = ? WHERE ItemId = ?";
+      string sql = "UPDATE Todos SET Title = ?, Description = ?, Date = ? WHERE ItemId = ?";
       using (var custstmt = conn.Prepare(sql)) {
         custstmt.Bind(1, TodoToUpdate.Title);
         custstmt.Bind(2, TodoToUpdate.Discription);
@@ -84,7 +84,7 @@ namespace HW6.Services {
     }
 
     public void DeleteById(string itemId) {
-      string sql = "DELETE FROM Todo WHERE ItemId = ?";
+      string sql = "DELETE FROM Todos WHERE ItemId = ?";
       using (var statement = conn.Prepare(sql)) {
         statement.Bind(1, itemId);
         statement.Step();
