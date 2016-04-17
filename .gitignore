@@ -216,3 +216,4 @@ ModelManifest.xml
 *.zip
 *.docx
 14331401-*/
+.DS_Store

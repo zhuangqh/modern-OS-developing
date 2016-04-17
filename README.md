@@ -1,7 +1,7 @@
 # Modern-OS-Developing
 Course Modern Operating System Develop from SYSU
 
-## Homework List
+## Windows 10 Development
 
 1. HW1
   - simple event handle
@@ -19,3 +19,6 @@ Course Modern Operating System Develop from SYSU
   - sharing target
 6. HW6
   - SQLite
+7. HW7
+  - Network
+  - json, XML parser
